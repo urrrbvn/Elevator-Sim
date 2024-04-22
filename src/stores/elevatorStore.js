@@ -31,6 +31,9 @@ export const useElevatorStore = defineStore('elevator', () => {
 
   watch(queueArr, ()=>{
     if(queueArr.value.length > 0){
+      queueArr.value.forEach(elem =>{
+        floors.value[elem-1].status = 'waiting'
+      })
       handleQueue()
     }
   })
@@ -58,11 +61,11 @@ export const useElevatorStore = defineStore('elevator', () => {
   saveToLocal('floorsCount', count)
 
   let newFloors = []
-    for(let i = 1; i <= count; i++){
+    for(let i = 0; i < count; i++){
       newFloors.push(
         {
-          id: i,
-          isFree: true
+          id: i+1,
+          status: 'notWaiting'
         }
       )
     }
@@ -81,17 +84,15 @@ export const useElevatorStore = defineStore('elevator', () => {
         const freeElevatorId = freeElevatorsIds[0]
         toFloor(nextFloor, freeElevatorId)
         floorQueue.delete(nextFloor)
-        
       }
     }
   }
 
   function toFloor(nextFloor, id) {
     if(elevators[id -1].currentFloor === nextFloor || elevators[id-1].status !== 'notMoving'){
-      floorQueue.add(nextFloor)
+      floors.value[nextFloor-1].status = 'notWaiting'
       return
     }
-    
 
     elevators[id-1].nextFloor = nextFloor
     elevators[id-1].status = 'moving'
@@ -101,6 +102,7 @@ export const useElevatorStore = defineStore('elevator', () => {
       elevators[id-1].nextFloor = null
       elevators[id-1].status = 'rest'
       floorQueue.delete(nextFloor)
+      floors.value[nextFloor-1].status = 'notWaiting'
       setTimeout(()=>{
         elevators[id-1].status = 'notMoving'
         handleQueue()

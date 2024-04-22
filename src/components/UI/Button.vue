@@ -1,11 +1,14 @@
 <template>
     <div class="btn-container">
-        <button @click="floorHandler()">{{ floor.id }}</button>
+        <button @click="floorHandler()"
+                :class="buttonIndication"        
+        >{{ floor.id }}
+        </button>
     </div>
 </template>
 
 <script setup>
-import {defineProps} from 'vue';
+import {defineProps, computed} from 'vue';
 import { useElevatorStore } from '@/stores/elevatorStore';
 
 const props = defineProps({
@@ -16,6 +19,10 @@ const elevatorStore = useElevatorStore()
 function floorHandler() {
     elevatorStore.floorQueue.add(props.floor.id)
 }
+
+const buttonIndication = computed(()=>{
+    return props.floor.status === 'waiting' ? 'waiting' : ''
+})
 
 </script>
 
@@ -32,5 +39,8 @@ function floorHandler() {
         border-radius: 10px;
         height: 50px;
         width: 50px;
+    }
+    .waiting{
+        background-color: red;
     }
 </style>

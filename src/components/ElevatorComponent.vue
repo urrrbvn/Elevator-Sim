@@ -2,12 +2,14 @@
     <h1>ЕДЕМ НА: {{ props.nextFloor }}</h1>
     <h1>НАХОДИМСЯ: {{ props.currentFloor}}</h1>
     <div class="elevator-floors" :style="floorsStyles">
-        <div class="elevator-cabine" :style="elevatorMove">
+        <div class="elevator-cabine" :style="elevatorMove" :class="restIndication">
             {{ status }}
+            <img src="../assets/icons/up-svgrepo-com.svg" width="30px" height="30px" v-if="directionIndicator === 'up'">
+            <img src="../assets/icons/down-svgrepo-com.svg" width="30px" height="30px" v-if="directionIndicator === 'down'">
         </div>
     </div>
-    <button @click="console.log(elevatorStore.queueArr)">Массив очереди</button>
-    <button @click="console.log(elevatorStore.queueArr[0])">первый в оечреди</button>
+    <!-- <button @click="console.log(elevatorStore.queueArr)">Массив очереди</button>
+    <button @click="console.log(elevatorStore.queueArr[0])">первый в оечреди</button> -->
     
 </template>
 
@@ -51,7 +53,20 @@ const elevatorMove = computed(()=>{
 
         return { marginBottom, transition }
     }
+})
 
+const restIndication = computed(()=>{
+        return props.status === 'rest' ? 'rest' : ''
+    })
+
+const directionIndicator = computed(()=>{
+    if(props.nextFloor === null){
+        return ''
+    }else if(props.currentFloor > props.nextFloor){
+        return 'down'
+    }else if(props.currentFloor < props.nextFloor){
+        return 'up'
+    }
 })
 
 </script>
@@ -71,8 +86,34 @@ const elevatorMove = computed(()=>{
     .elevator-cabine{
         width: 80px;
         height: 80px;
-        background-color: black;
+        background-color: rgb(59, 59, 59);
         /* margin-bottom: 20px; */
         color: wheat;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    .rest{
+        animation: rest 3s ease-in-out 0s infinite;
+    }
+    @keyframes rest {
+        0%{
+            background-color: green;
+        }
+        25%{
+            background-color: greenyellow;
+        }
+        50%{
+            background-color: green;
+        }
+        75%{
+            background-color: greenyellow;
+        }
+        100%{
+            background-color: green;
+        }
     }
 </style>
