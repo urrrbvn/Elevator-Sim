@@ -3,13 +3,11 @@
     <h1>НАХОДИМСЯ: {{ props.currentFloor}}</h1> -->
     <div class="elevator-floors" :style="floorsStyles">
         <div class="elevator-cabine" :style="elevatorMove" :class="restIndication">
-            {{ status }}
+            {{ id }}
             <img src="../assets/icons/up-svgrepo-com.svg" width="30px" height="30px" v-if="directionIndicator === 'up'">
             <img src="../assets/icons/down-svgrepo-com.svg" width="30px" height="30px" v-if="directionIndicator === 'down'">
         </div>
     </div>
-    <!-- <button @click="console.log(elevatorStore.queueArr)">Массив очереди</button>
-    <button @click="console.log(elevatorStore.queueArr[0])">первый в оечреди</button> -->
     
 </template>
 

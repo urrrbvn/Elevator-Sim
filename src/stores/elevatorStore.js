@@ -16,19 +16,19 @@ export const useElevatorStore = defineStore('elevator', () => {
   })
 
   const freeElevators = computed(()=>{
-    let freeElevatorsIds = []
-    elevators.forEach(elevator => {
-      if(elevator.status === 'notMoving'){
-        freeElevatorsIds.push(elevator.id)
-      }
-    })
-    return freeElevatorsIds
+    // let freeElevatorsIds = []
+    // elevators.forEach(elevator => {
+    //   if(elevator.status === 'notMoving'){
+    //     freeElevatorsIds.push(elevator.id)
+    //   }
+    // })
+    // return freeElevatorsIds
+    return elevators.filter(elevator => elevator.status === 'notMoving')
   })
 
 
   watch(elevatorsCount, ()=>setElevators(elevatorsCount.value))
   watch(floorsCount, ()=>setFloors(floorsCount.value))
-  watch (elevatorsCount, console.log(elevatorsCount.value))
 
   watch(queueArr, ()=>{
     if(queueArr.value.length > 0){
@@ -95,6 +95,35 @@ export const useElevatorStore = defineStore('elevator', () => {
     
   }
 
+  function findClosestElevator(arr, nextFloor){
+    let freeElevatorsData = []
+    let differences = []
+    let closestWay = 0
+    arr.forEach(elevator => {
+      freeElevatorsData.push(
+        {
+          id:elevator.id,
+          path: Math.abs(nextFloor - elevator.currentFloor)
+        }
+      )
+      differences.push(Math.abs(nextFloor - elevator.currentFloor))
+    })
+    closestWay = Math.min(...differences)
+    console.log(freeElevatorsData);
+    // console.log(differences);
+    console.log(closestWay);
+    
+    let closestElevator = freeElevatorsData.filter(elevator => elevator.path === closestWay)
+    console.log(closestElevator);
+    // if(closestElevator.length != 1){
+    //   return closestElevator[0].id
+    // }else{
+    //   return closestElevator[0].id
+    // }
+    return closestElevator[0].id
+  }
+
+
   function handleQueue(){
     const nextFloor = queueArr.value[0]
 
@@ -103,8 +132,9 @@ export const useElevatorStore = defineStore('elevator', () => {
 
       if(freeElevatorsIds.length > 0){
 
-        const freeElevatorId = freeElevatorsIds[0]
-        toFloor(nextFloor, freeElevatorId)
+        const closestElevator = findClosestElevator(freeElevators.value, nextFloor)
+        console.log(closestElevator);
+        toFloor(nextFloor, closestElevator)
         floorQueue.delete(nextFloor)
       }
     }
