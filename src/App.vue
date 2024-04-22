@@ -18,9 +18,18 @@ import Elevator from './components/ElevatorComponent.vue';
 import ButtonPanel from './components/ButtonPanel.vue';
 
 import { useElevatorStore } from './stores/elevatorStore';
-import { watch } from 'vue';
+import { onMounted } from 'vue';
 const elevatorStore = useElevatorStore()
 
+onMounted(()=>{
+  console.log('Mount set');
+  const startElevatorCount = parseInt(localStorage.getItem('elevatorsCount'))
+  const startFloorsCount = parseInt(localStorage.getItem('floorsCount'))
+
+  elevatorStore.setElevators(startElevatorCount)
+  elevatorStore.setFloors(startFloorsCount)
+  
+})
 
 </script>
 

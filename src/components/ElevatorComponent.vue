@@ -1,6 +1,6 @@
 <template>
-    <h1>ЕДЕМ НА: {{ props.nextFloor }}</h1>
-    <h1>НАХОДИМСЯ: {{ props.currentFloor}}</h1>
+    <!-- <h1>ЕДЕМ НА: {{ props.nextFloor }}</h1>
+    <h1>НАХОДИМСЯ: {{ props.currentFloor}}</h1> -->
     <div class="elevator-floors" :style="floorsStyles">
         <div class="elevator-cabine" :style="elevatorMove" :class="restIndication">
             {{ status }}

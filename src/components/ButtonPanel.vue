@@ -1,6 +1,6 @@
 <template> 
     <div class="btn-panel" :style="panelHeight">
-        <ButtonUI v-for="floor in elevatorStore.floors.value" 
+        <ButtonUI v-for="floor in elevatorStore.floors" 
                   :floor = floor
                   :class="buttonIndication"
         >
