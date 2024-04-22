@@ -10,46 +10,103 @@ export const useElevatorStore = defineStore('elevator', () => {
   const floorsCount = ref(localStorage.getItem('floorsCount') ?? 5)
 
 
+  const floorQueue = reactive(new Set())
+  const queueArr = computed(()=>{
+    return Array.from(floorQueue)
+  })
+
+  const freeElevators = computed(()=>{
+    let freeElevatorsIds = []
+    elevators.forEach(elevator => {
+      if(elevator.status === 'notMoving'){
+        freeElevatorsIds.push(elevator.id)
+      }
+    })
+    return freeElevatorsIds
+  })
+
+
   watch(elevatorsCount, setElevators(elevatorsCount.value))
   watch(floorsCount, setFloors(floorsCount.value))
+
+  watch(queueArr, ()=>{
+    if(queueArr.value.length > 0){
+      handleQueue()
+    }
+  })
 
   function saveToLocal(fieldName, value){
     localStorage.setItem(`${fieldName}`, value)
   }
 
   function setElevators(count){
-    elevators.push(
-      {
-        id: count,
-        currentFloor: 1,
-        nextFloor: null,
-        status: 'notMoving'
-      }
-    )
+    saveToLocal('elevatorsCount', count)
+    for(let i = 0; i < count; i++){
+      elevators.push(
+        {
+          id: i+1,
+          currentFloor: 1,
+          nextFloor: null,
+          status: 'notMoving'
+        }
+      )
+    }
   }
 
   function setFloors(count){
 
-  saveToLocal('floorsCount', floorsCount.value)
+  saveToLocal('floorsCount', count)
 
   let newFloors = []
     for(let i = 1; i <= count; i++){
-      newFloors.push(i)
+      newFloors.push(
+        {
+          id: i,
+          isFree: true
+        }
+      )
     }
     floors.value = newFloors
     
   }
 
-  function toFloor(nextFloor, currentFloor, elevatorId) {
-    elevators[elevatorId-1].nextFloor = nextFloor
-    elevators[elevatorId-1].status = 'moving'
-    
-    setTimeout(()=>{
-      elevators[elevatorId-1].currentFloor = nextFloor
-      elevators[elevatorId-1].nextFloor = null
-      elevators[elevatorId-1].status = 'notMoving'
-    }, Math.abs(nextFloor - currentFloor)*1000)
+  function handleQueue(){
+    const nextFloor = queueArr.value[0]
+
+    if(nextFloor){
+      const freeElevatorsIds = freeElevators.value
+
+      if(freeElevatorsIds.length > 0){
+
+        const freeElevatorId = freeElevatorsIds[0]
+        toFloor(nextFloor, freeElevatorId)
+        floorQueue.delete(nextFloor)
+        
+      }
+    }
   }
 
-  return { elevators, floors, elevatorsCount, floorsCount, saveToLocal, toFloor, getFreeElevator }
+  function toFloor(nextFloor, id) {
+    if(elevators[id -1].currentFloor === nextFloor || elevators[id-1].status !== 'notMoving'){
+      floorQueue.add(nextFloor)
+      return
+    }
+    
+
+    elevators[id-1].nextFloor = nextFloor
+    elevators[id-1].status = 'moving'
+    
+    setTimeout(()=>{
+      elevators[id-1].currentFloor = nextFloor
+      elevators[id-1].nextFloor = null
+      elevators[id-1].status = 'rest'
+      floorQueue.delete(nextFloor)
+      setTimeout(()=>{
+        elevators[id-1].status = 'notMoving'
+        handleQueue()
+      }, 3000)
+    }, Math.abs(nextFloor - elevators[id-1].currentFloor)*1000)
+  }
+  
+  return { elevators, floors, elevatorsCount, floorsCount, saveToLocal, toFloor, floorQueue, queueArr}
 })

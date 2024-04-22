@@ -2,9 +2,13 @@
     <h1>ЕДЕМ НА: {{ props.nextFloor }}</h1>
     <h1>НАХОДИМСЯ: {{ props.currentFloor}}</h1>
     <div class="elevator-floors" :style="floorsStyles">
-        <div class="elevator-cabine" :style="elevatorMove"></div>
+        <div class="elevator-cabine" :style="elevatorMove">
+            {{ status }}
+        </div>
     </div>
-    <button @click="console.log(elevatorMove)">TEST</button>
+    <button @click="console.log(elevatorStore.queueArr)">Массив очереди</button>
+    <button @click="console.log(elevatorStore.queueArr[0])">первый в оечреди</button>
+    
 </template>
 
 <script setup> 
@@ -69,5 +73,6 @@ const elevatorMove = computed(()=>{
         height: 80px;
         background-color: black;
         /* margin-bottom: 20px; */
+        color: wheat;
     }
 </style>

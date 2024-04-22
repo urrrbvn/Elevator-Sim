@@ -1,6 +1,6 @@
 <template>
     <div class="btn-container">
-        <button @click="elevatorStore.toFloor(props.floor, elevatorStore.elevators[0].currentFloor ,1)">{{ floor }}</button>
+        <button @click="floorHandler()">{{ floor.id }}</button>
     </div>
 </template>
 
@@ -9,9 +9,13 @@ import {defineProps} from 'vue';
 import { useElevatorStore } from '@/stores/elevatorStore';
 
 const props = defineProps({
-    floor: Number
+    floor: Object
 })
 const elevatorStore = useElevatorStore()
+
+function floorHandler() {
+    elevatorStore.floorQueue.add(props.floor.id)
+}
 
 </script>
 
