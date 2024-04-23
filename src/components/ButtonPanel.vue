@@ -15,7 +15,7 @@ import ButtonUI from './UI/Button.vue'
 
 
 const elevatorStore = useElevatorStore()
-
+//Соответствие высоты панели с кнопками, с высотой лифта
 const panelHeight = computed(()=>{
     return `height: ${elevatorStore.floorsCount * 100}px`
 })

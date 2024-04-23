@@ -15,11 +15,11 @@ const props = defineProps({
     floor: Object
 })
 const elevatorStore = useElevatorStore()
-
+//Добавляем этаж в очередь вызовов
 function floorHandler() {
     elevatorStore.floorQueue.add(props.floor.id)
 }
-
+//Индикация ожидания лифта на этаже
 const buttonIndication = computed(()=>{
     return props.floor.status === 'waiting' ? 'waiting' : ''
 })

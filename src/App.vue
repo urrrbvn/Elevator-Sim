@@ -21,15 +21,21 @@ import { useElevatorStore } from './stores/elevatorStore';
 import { onMounted } from 'vue';
 const elevatorStore = useElevatorStore()
 
+// Подтягивание данных при загрузке страницы
 onMounted(()=>{
-  console.log('Mount set');
+
   const startElevatorCount = parseInt(localStorage.getItem('elevatorsCount'))
   const startFloorsCount = parseInt(localStorage.getItem('floorsCount'))
+  
+  if(startElevatorCount && startFloorsCount){
+    elevatorStore.setElevators(startElevatorCount)
+    elevatorStore.setFloors(startFloorsCount)
+  }
 
-  elevatorStore.setElevators(startElevatorCount)
-  elevatorStore.setFloors(startFloorsCount)
+  elevatorStore.getElevatorsFromLocal()
   
 })
+
 
 </script>
 

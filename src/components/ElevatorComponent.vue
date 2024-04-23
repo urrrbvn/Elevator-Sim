@@ -1,14 +1,11 @@
 <template>
-    <!-- <h1>ЕДЕМ НА: {{ props.nextFloor }}</h1>
-    <h1>НАХОДИМСЯ: {{ props.currentFloor}}</h1> -->
     <div class="elevator-floors" :style="floorsStyles">
         <div class="elevator-cabine" :style="elevatorMove" :class="restIndication">
-            {{ id }}
+            {{ currentFloor }}
             <img src="../assets/icons/up-svgrepo-com.svg" width="30px" height="30px" v-if="directionIndicator === 'up'">
             <img src="../assets/icons/down-svgrepo-com.svg" width="30px" height="30px" v-if="directionIndicator === 'down'">
         </div>
     </div>
-    
 </template>
 
 <script setup> 
@@ -23,12 +20,12 @@ const props = defineProps({
     currentFloor: Number,
     nextFloor: Number
 })
-
+// Управление высотой шахты лифта
 const floorsStyles = computed(()=>{
     const height = `height: ${elevatorStore.floorsCount *100}px`
     return height
 })
-
+//Управление визуальным положением лифта
 const elevatorMove = computed(()=>{
 
     if(props.nextFloor){
@@ -46,17 +43,17 @@ const elevatorMove = computed(()=>{
 
         return { marginBottom, transition }
     }else{
-        const marginBottom = `${props.currentFloor-1*100}`
+        const marginBottom = `${20 + (props.currentFloor-1)*100}px`
         const transition = `margin-bottom ${Math.abs(props.nextFloor - props.currentFloor)}s ease`
 
         return { marginBottom, transition }
     }
 })
-
+//Индикация отдыха лифта
 const restIndication = computed(()=>{
         return props.status === 'rest' ? 'rest' : ''
     })
-
+//Индикация направления движения лифта
 const directionIndicator = computed(()=>{
     if(props.nextFloor === null){
         return ''
