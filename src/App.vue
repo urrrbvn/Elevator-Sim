@@ -23,17 +23,13 @@ const elevatorStore = useElevatorStore()
 
 // Подтягивание данных при загрузке страницы
 onMounted(()=>{
+  elevatorStore.setElevators(elevatorStore.elevatorsCount)
+  elevatorStore.setFloors(elevatorStore.floorsCount)
 
-  const startElevatorCount = parseInt(localStorage.getItem('elevatorsCount'))
-  const startFloorsCount = parseInt(localStorage.getItem('floorsCount'))
-  
-  if(startElevatorCount && startFloorsCount){
-    elevatorStore.setElevators(startElevatorCount)
-    elevatorStore.setFloors(startFloorsCount)
+  const loadElevatorsData = JSON.parse(localStorage.getItem('elevatorsData'))
+  if(loadElevatorsData){
+    elevatorStore.getElevatorsFromLocal()
   }
-
-  elevatorStore.getElevatorsFromLocal()
-  
 })
 
 

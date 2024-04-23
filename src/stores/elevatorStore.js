@@ -10,8 +10,8 @@ export const useElevatorStore = defineStore('elevator', () => {
 
   //Переменные count нужны для того, чтобы setElevators и setFloors могли ориентироваться на них, формируя массив с данными 
 
-  const elevatorsCount = ref(parseInt(localStorage.getItem('elevatorsCount')) ?? 1)
-  const floorsCount = ref(parseInt(localStorage.getItem('floorsCount')) ?? 5)
+  const elevatorsCount = ref(parseInt(localStorage.getItem('elevatorsCount')) || 1)
+  const floorsCount = ref(parseInt(localStorage.getItem('floorsCount')) || 5)
 
  //Очередь вызовов, сразу преобразована в массив, для удобства одбращения к первому элементу
   const floorQueue = reactive(new Set())
@@ -65,10 +65,10 @@ export const useElevatorStore = defineStore('elevator', () => {
   //Функция отвечает за масштабирование количества лифтов
   //Сравнивает счетчик кол-ва лифтов и длинну текущего массива лифтов, на основе изначального массива формирует новый массив и его значения подставляет в массив elevators
   function setElevators(count){
-    console.log('setElevator call', count);
+    // console.log('setElevator call', count);
     saveToLocal('elevatorsCount', count)
       const newElevatorArr = [...elevators]
-      console.log(newElevatorArr);
+      // console.log(newElevatorArr);
       if(newElevatorArr.length < 1){
         for(let i = 0; i < (count); i++){
           newElevatorArr.push(
@@ -80,7 +80,7 @@ export const useElevatorStore = defineStore('elevator', () => {
             }
           )
         }
-        console.log(newElevatorArr);
+        // console.log(newElevatorArr);
       }else if(newElevatorArr.length < count){
         const elevatorsToAdd = count - newElevatorArr.length
         for(let i = 0; i < elevatorsToAdd; i++){
@@ -99,11 +99,11 @@ export const useElevatorStore = defineStore('elevator', () => {
         for(let i =0; i < elevatorsToDelete; i++){
           newElevatorArr.pop() 
         }
-        console.log(newElevatorArr);
+        // console.log(newElevatorArr);
       }
-      console.log(newElevatorArr);
+      // console.log(newElevatorArr);
       elevators.splice(0, elevators.length, ...newElevatorArr)
-      console.log(elevators.value);
+      // console.log(elevators);
   }
   //Схожая функция для этажей
   function setFloors(count){
